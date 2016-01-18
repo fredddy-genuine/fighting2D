@@ -109,7 +109,7 @@ Hero.prototype.move = function() {
       break;
   }
 
-  this._draw();
+  //this._draw();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -138,11 +138,13 @@ Hero.prototype.update = function() {
     this.move();
 
     this.counter++;
-  } else {
+  } /*else {
     this._draw();
-  }
+  }*/
 
   this.makeGravity();
+  
+  this._draw();
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
