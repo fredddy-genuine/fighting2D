@@ -1,0 +1,398 @@
+<html>
+
+<head>
+  <title>city</title>
+</head>
+
+<body>
+  <canvas id="canv"></canvas>
+  <script>
+    var canvas = document.getElementById('canv');
+
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+
+    var context = canvas.getContext('2d');
+
+    function generateBuilding(context, canvasHeight, canvasWidth) {
+      var minHeight = 200;
+      var maxHeight = 500;
+      var minWidth = 100;
+      var maxWidth = 250;
+
+      var Height = rand(minHeight, maxHeight);
+      var Width = rand(minWidth, maxWidth);
+
+      var minCountOfWindowsInRow = 3;
+      var maxCountOfWindowsInRow = 6;
+
+      var countOfWindowsInRow = rand(minCountOfWindowsInRow, maxCountOfWindowsInRow);
+
+      var windowWidth = (Width / (countOfWindowsInRow + 2));
+
+      var windowIndent = (Width - (windowWidth*countOfWindowsInRow)) / (countOfWindowsInRow + 1);
+
+      var windowHeight = rand(windowWidth/2, windowWidth);
+
+      var countOfWindowsInCol = Height / (windowHeight + windowIndent);
+
+      var ground = canvasHeight - 100;
+      var x = rand(0, canvasWidth);
+      var y = ground - Height;
+
+      var colorRedGreen = rand(5, 40);
+      var colorBlue = rand(10, 70);
+
+      var windowColor = 'yellow';
+      var towerColor = 'rgb(' + colorRedGreen + ',' + colorRedGreen + ',' + colorBlue + ')';
+
+      context.beginPath();
+      context.fillStyle = towerColor;
+      context.fillRect(x, y, Width, Height);
+
+      context.beginPath();
+      context.fillStyle = windowColor;
+
+      //var str = 'towerWidth: '+Width+'\n' + 'windowWidth: '+windowWidth+'\n'+'windowCount: '+countOfWindowsInRow;
+      //alert(str);
+
+      for (var i = 0; i < countOfWindowsInCol; i++) {
+        for (var j = 0; j < countOfWindowsInRow; j++) {
+          context.fillRect(windowIndent + x+j*(windowIndent+windowWidth), 0 + windowIndent + y+ i*(windowIndent+windowHeight), windowWidth, windowHeight);
+        }
+      }
+    }
+
+    function rand(min, max) {
+      return Math.round(Math.random() * (max - min + 1) + min - 0.5);
+    }
+
+    for (var i = 0; i < 30; i++) {
+      generateBuilding(context, canvas.height, canvas.width);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function aaaa(context, canvasHeight, canvasWidth) {
+
+      function generateBuilding( /*context, canvasHeight, canvasWidth*/ ) {
+        var minHeight = 300;
+        var maxHeight = 600;
+        var minWidth = 100;
+        var maxWidth = 250;
+
+        var Height = rand(minHeight, maxHeight);
+        var Width = rand(minWidth, maxWidth);
+
+        var minCountOfWindowsInRow = 2;
+        var maxCountOfWindowsInRow = 4;
+
+        var countOfWindowsInRow = rand(minCountOfWindowsInRow, maxCountOfWindowsInRow);
+
+        var windowWidth = (Width / (countOfWindowsInRow + 2));
+
+        var windowIndent = rand(3, 5); //(Width - (windowWidth * countOfWindowsInRow)) / (countOfWindowsInRow + 1);
+
+        var windowHeight = rand(windowWidth / 7, windowWidth / 4);
+
+        var countOfWindowsInCol = Height / (windowHeight + windowIndent);
+
+        var ground = canvasHeight - 87;
+        var x = rand(-100, canvasWidth - minWidth);
+        var y = ground - Height;
+
+        var colorRedGreen = rand(5, 40);
+        var colorBlue = rand(10, 70);
+
+        var windowColorRed = 60;
+        var windowColorGreen = 237;
+        var windowColorBlue = 255;
+
+        var windowColors = [
+          function() {
+            windowColorRed = 60;
+            windowColorGreen = 237;
+            windowColorBlue = 255;
+          },
+          function() {
+            windowColorRed = 255;
+            windowColorGreen = 255;
+            windowColorBlue = 255;
+          },
+          function() {
+            windowColorRed = 253;
+            windowColorGreen = 228;
+            windowColorBlue = 40;
+          }
+
+        ];
+
+        //windowColors[rand(0,2)]();
+        windowColors[rand(0, 1)]();
+
+        var windowColor = 'rgb(' + windowColorRed + ', ' + windowColorGreen + ', ' + windowColorBlue + ')';
+
+
+        var towerColor = 'rgb(' + colorRedGreen + ',' + colorRedGreen + ',' + colorBlue + ')';
+
+        context.beginPath();
+        context.fillStyle = towerColor;
+        context.fillRect(x, y, Width, Height);
+
+        context.beginPath();
+        context.fillStyle = windowColor;
+
+        //var str = 'towerWidth: '+Width+'\n' + 'windowWidth: '+windowWidth+'\n'+'windowCount: '+countOfWindowsInRow;
+        //alert(str);
+
+        for (var i = 0; i < countOfWindowsInCol; i++) {
+          for (var j = 0; j < countOfWindowsInRow; j++) {
+            //context.fillRect(windowIndent + x + j * (windowIndent + windowWidth), 0 + windowIndent + y + i * (windowIndent + windowHeight), windowWidth, windowHeight);
+            if (rand(1, 5) != 1) {
+              var xx = windowIndent + x + j * (windowIndent + windowWidth);
+              var yy = windowIndent + y + i * (windowIndent + windowHeight);
+              //context.fillRect(xx, yy, windowWidth, windowHeight);
+
+              //context.beginPath();
+
+              /*var grd = context.createRadialGradient(xx + windowWidth/2, yy + windowHeight/2, 10, xx + windowWidth/2, yy + windowHeight/2, 25);
+              grd.addColorStop(0, 'rgba('+windowColorRed+', '+windowColorGreen+','+windowColorBlue+', 1)');
+              grd.addColorStop(1, 'rgba(255, 255,220, 0)');
+              context.fillStyle = grd;
+              context.fillRect(xx - windowWidth, yy - windowHeight, windowWidth*2, windowHeight*2);*/
+              //.beginPath();
+              context.shadowColor = 'rgba(' + windowColorRed + ', ' + windowColorGreen + ',' + windowColorBlue + ', 1)';
+              context.shadowBlur = 20;
+              context.shadowOffsetX = 0;
+              context.shadowOffsetY = 0;
+              context.fillRect(xx, yy, windowWidth, windowHeight);
+              context.shadowBlur = 0;
+              context.shadowOffsetX = 0;
+              context.shadowOffsetY = 0;
+              //context.closePath();
+              //context.fill();
+              //context.beginPath();
+              context.fillStyle = windowColor;
+              context.shadowColor = 'rgb(0,0,0,0)';
+            } else {
+              context.shadowBlur = 0;
+              context.shadowOffsetX = 0;
+              context.shadowOffsetY = 0;
+              context.beginPath();
+              context.fillStyle = 'gray';
+              var xx = windowIndent + x + j * (windowIndent + windowWidth);
+              var yy = windowIndent + y + i * (windowIndent + windowHeight);
+              context.fillRect(xx, yy, windowWidth, windowHeight);
+            }
+
+          }
+        }
+      }
+
+      function rand(min, max) {
+        return Math.round(Math.random() * (max - min + 1) + min - 0.5);
+      }
+
+      for (var i = 0; i < 50; i++) {
+        generateBuilding(context, canvas.height, canvas.width);
+      }
+
+      context.beginPath();
+      context.fillStyle = 'rgba(0,0,0,0.6)';
+
+      context.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+    */
+
+
+
+
+  </script>
+  <!--
+  function aaaa(context, canvasHeight, canvasWidth) {
+
+    function generateBuilding( /*context, canvasHeight, canvasWidth*/ ) {
+      var minHeight = 300;
+      var maxHeight = 600;
+      var minWidth = 100;
+      var maxWidth = 250;
+
+      var Height = rand(minHeight, maxHeight);
+      var Width = rand(minWidth, maxWidth);
+
+      var minCountOfWindowsInRow = 2;
+      var maxCountOfWindowsInRow = 4;
+
+      var countOfWindowsInRow = rand(minCountOfWindowsInRow, maxCountOfWindowsInRow);
+
+      var windowWidth = (Width / (countOfWindowsInRow + 2));
+
+      var windowIndent = rand(3, 5); //(Width - (windowWidth * countOfWindowsInRow)) / (countOfWindowsInRow + 1);
+
+      var windowHeight = rand(windowWidth / 7, windowWidth / 4);
+
+      var countOfWindowsInCol = Height / (windowHeight + windowIndent);
+
+      var ground = canvasHeight - 87;
+      var x = rand(-100, canvasWidth - minWidth);
+      var y = ground - Height;
+
+      var colorRedGreen = rand(5, 40);
+      var colorBlue = rand(10, 70);
+
+      var windowColorRed = 60;
+      var windowColorGreen = 237;
+      var windowColorBlue = 255;
+
+      var windowColors = [
+        function() {
+          windowColorRed = 60;
+          windowColorGreen = 237;
+          windowColorBlue = 255;
+        },
+        function() {
+          windowColorRed = 255;
+          windowColorGreen = 255;
+          windowColorBlue = 255;
+        },
+        function() {
+          windowColorRed = 253;
+          windowColorGreen = 228;
+          windowColorBlue = 40;
+        }
+
+      ];
+
+      //windowColors[rand(0,2)]();
+      windowColors[rand(0, 1)]();
+
+      var windowColor = 'rgb(' + windowColorRed + ', ' + windowColorGreen + ', ' + windowColorBlue + ')';
+
+
+      var towerColor = 'rgb(' + colorRedGreen + ',' + colorRedGreen + ',' + colorBlue + ')';
+
+      context.beginPath();
+      context.fillStyle = towerColor;
+      context.fillRect(x, y, Width, Height);
+
+      context.beginPath();
+      context.fillStyle = windowColor;
+
+      //var str = 'towerWidth: '+Width+'\n' + 'windowWidth: '+windowWidth+'\n'+'windowCount: '+countOfWindowsInRow;
+      //alert(str);
+
+      for (var i = 0; i < countOfWindowsInCol; i++) {
+        for (var j = 0; j < countOfWindowsInRow; j++) {
+          //context.fillRect(windowIndent + x + j * (windowIndent + windowWidth), 0 + windowIndent + y + i * (windowIndent + windowHeight), windowWidth, windowHeight);
+          if (rand(1, 5) != 1) {
+            var xx = windowIndent + x + j * (windowIndent + windowWidth);
+            var yy = windowIndent + y + i * (windowIndent + windowHeight);
+            //context.fillRect(xx, yy, windowWidth, windowHeight);
+
+            //context.beginPath();
+
+            /*var grd = context.createRadialGradient(xx + windowWidth/2, yy + windowHeight/2, 10, xx + windowWidth/2, yy + windowHeight/2, 25);
+            grd.addColorStop(0, 'rgba('+windowColorRed+', '+windowColorGreen+','+windowColorBlue+', 1)');
+            grd.addColorStop(1, 'rgba(255, 255,220, 0)');
+            context.fillStyle = grd;
+            context.fillRect(xx - windowWidth, yy - windowHeight, windowWidth*2, windowHeight*2);*/
+            //.beginPath();
+            context.shadowColor = 'rgba(' + windowColorRed + ', ' + windowColorGreen + ',' + windowColorBlue + ', 1)';
+            context.shadowBlur = 20;
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            context.fillRect(xx, yy, windowWidth, windowHeight);
+            context.shadowBlur = 0;
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            //context.closePath();
+            //context.fill();
+            //context.beginPath();
+            context.fillStyle = windowColor;
+            context.shadowColor = 'rgb(0,0,0,0)';
+          } else {
+            context.shadowBlur = 0;
+            context.shadowOffsetX = 0;
+            context.shadowOffsetY = 0;
+            context.beginPath();
+            context.fillStyle = 'gray';
+            var xx = windowIndent + x + j * (windowIndent + windowWidth);
+            var yy = windowIndent + y + i * (windowIndent + windowHeight);
+            context.fillRect(xx, yy, windowWidth, windowHeight);
+          }
+
+        }
+      }
+    }
+
+    function rand(min, max) {
+      return Math.round(Math.random() * (max - min + 1) + min - 0.5);
+    }
+
+    for (var i = 0; i < 50; i++) {
+      generateBuilding(context, canvas.height, canvas.width);
+    }
+
+    context.beginPath();
+    context.fillStyle = 'rgba(0,0,0,0.6)';
+
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+  }
+  aaaa(ctx, canvas.height, canvas.width);
+-->
+</body>
+
+</html>

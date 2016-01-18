@@ -1,0 +1,407 @@
+<html>
+
+<head>
+  <title>game</title>
+  <style>
+    html,
+    body {
+      margin: 0px;
+    }
+  </style>
+  <meta name="name" content="content" charset="utf-8">
+  <script type="text/javascript" src='Classes.js'></script>
+  <script type="text/javascript" src='Hero.js'></script>
+  <script type="text/javascript" src='Platform.js'></script>
+</head>
+
+<body>
+  <div style="position: absolute; top: 300; left: 500; font-family: 'Trebuchet MS'; font-size: 50px; font-weight:bold; color:teal;" id='loadingMessage'>LOADING...</div>
+  <canvas id="maincanvas" width='1000' height='600'></canvas>
+
+  <div id="info" style='position: absolute; right: 100px; top: 100px;'></div>
+
+  <script>
+    var hulk_green_right_running = new Image();
+    var hulk_green_left_running = new Image();
+
+    var hulk_green_right_stand = new Image();
+    var hulk_green_left_stand = new Image();
+
+    var hulk_green_right_jumping = new Image();
+
+
+    var hulk_pink_right_running = new Image();
+    var hulk_pink_left_running = new Image();
+
+    var hulk_pink_right_stand = new Image();
+    var hulk_pink_left_stand = new Image();
+
+    var background1 = new Image();
+
+
+    var loading = new Promise(function(resolve, reject) {
+        var message = 'loading hulk_green_right_running';
+        console.log(message);
+
+        hulk_green_right_running.src = 'Resources/Hulk/green_right_running.png';
+
+        hulk_green_right_running.onload = function() {
+          setTimeout(function() {
+            resolve();
+          }, 500);
+        }
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_green_left_running';
+          console.log(message);
+
+          hulk_green_left_running.src = 'Resources/Hulk/green_left_running.png';
+
+          hulk_green_left_running.onload = function() {
+            resolve();
+          }
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_pink_right_running';
+          console.log(message);
+
+          hulk_pink_right_running.src = 'Resources/Hulk/pink_right_running.png';
+
+          hulk_pink_right_running.onload = function() {
+            resolve();
+          }
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_pink_left_running';
+          console.log(message);
+
+          hulk_pink_left_running.src = 'Resources/Hulk/pink_left_running.png';
+
+          hulk_pink_left_running.onload = function() {
+            resolve();
+          }
+        });
+      })
+
+    .then(function() { //-------------------------------------------
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_green_right_stand';
+          console.log(message);
+
+          hulk_green_right_stand.src = 'Resources/Hulk/green_right_stand.png';
+
+          hulk_green_right_stand.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_green_left_stand';
+          console.log(message);
+
+          hulk_green_left_stand.src = 'Resources/Hulk/green_left_stand.png';
+
+          hulk_green_left_stand.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_pink_right_stand';
+          console.log(message);
+
+          hulk_pink_right_stand.src = 'Resources/Hulk/pink_right_stand.png';
+
+          hulk_pink_right_stand.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading pink_left_stand';
+          console.log(message);
+
+          hulk_pink_left_stand.src = 'Resources/Hulk/pink_left_stand.png';
+
+          hulk_pink_left_stand.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+
+    .then(function() { //-------------------------------------------
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_green_right_jumping';
+          console.log(message);
+
+          hulk_green_right_jumping.src = 'Resources/Hulk/green_right_jumping.png';
+
+          hulk_green_right_jumping.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading background image maxresdefault.jpg';
+          console.log(message);
+
+          background1.src = 'Resources/backgrounds/maxresdefault.jpg';
+
+          background1.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+
+
+
+    .then(function() {
+        var message = 'Resourses loading success';
+        console.log(message);
+
+        return message;
+      }, function(error) {
+        console.log('Loading Error ' + error);
+      })
+      .then(function() {
+        var message = 'creating background';
+        console.log(message);
+
+        var canvas = document.getElementById('maincanvas');
+
+        canvas.width = window.innerWidth; //document.documentElement.clientWidth;
+        canvas.height = window.innerHeight; //document.documentElement.clientHeight;
+
+        var ctx = canvas.getContext('2d');
+
+
+
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = 'rgb(210, 210, 250)';
+        ctx.stroke();
+
+        ctx.beginPath();
+        var sky_gradient = ctx.createLinearGradient(0, 0, 0, canvas.height - canvas.height / 4);
+        sky_gradient.addColorStop(0, 'rgb(180,200, 255)' /*"rgb(180,200, 255)"*/ );
+        sky_gradient.addColorStop(1, "white");
+
+        ctx.fillStyle = sky_gradient;
+        ctx.fillRect(1, 1, canvas.width - 2, canvas.height - canvas.height / 4);
+
+
+
+        ctx.beginPath();
+
+        var grd = ctx.createRadialGradient(900, 100, 10, 900, 100, 100);
+        grd.addColorStop(0, 'rgba(255, 255,200, 1)');
+        grd.addColorStop(1, 'rgba(255, 255,220, 0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(700, 0, 400, 400);
+
+
+        ctx.beginPath();
+        ctx.fillStyle = 'rgb(15, 50, 5)';
+        ctx.fillRect(1, canvas.height - canvas.height / 8, canvas.width - 2, canvas.height / 8 - 1);
+
+        var backgroungImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var backImgURL = canvas.toDataURL();
+        var backgroundImage = new Image();
+        backgroundImage.src = backImgURL;
+
+        document.body.style.background = backImgURL;
+        document.body.style.backgroundSize = 'cover';
+
+        return new Promise(function(resolve, reject) {
+          resolve({
+            canvas: canvas,
+            ctx: ctx,
+            backgroungImageData: backgroungImageData,
+            backgroundImage: backgroundImage
+          });
+        });
+      }).then(function(options) {
+        var MESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSAGE = 'CREATING GAME OBJECT'; //30 bukv S v mes_sage
+        console.log(MESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSAGE);
+
+        var GAME = {
+          fps: 60,
+          freq: Math.floor(1000 / 60),
+          lastFPS: 0,
+          framesCount: 0,
+          lastDate: 0,
+          tasks: [],
+          start: function() {
+            console.log('GAME STARTED');
+            GAME.lastDate = +(new Date());
+
+            GAME.timer = setInterval(function() {
+
+              if (GAME.framesCount == 123) { // condition can be different
+                var miliSecondsPerFrame = (+(new Date()) - GAME.lastDate) / GAME.framesCount;
+                GAME.lastFPS = 1000 / miliSecondsPerFrame;
+                GAME.framesCount = 0;
+                GAME.lastDate = +(new Date());
+              }
+
+              GAME.framesCount++;
+
+              for (var i = 0; i < GAME.tasks.length; i++) {
+                GAME.tasks[i]();
+              }
+
+            }, GAME.freq);
+          },
+          stop: function() {
+            clearInterval(GAME.timer);
+          }
+        }
+
+        return new Promise(function(resolve, reject) {
+          options.GAME = GAME;
+          resolve(options);
+        });
+      }).then(function(options) {
+        var MESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSAGE = 'CREATING MOVING OBJECTS AND PLATFORMS';
+        console.log(MESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSAGE);
+
+
+        var GAME = options.GAME;
+        var canvas = options.canvas;
+        var ctx = options.ctx;
+        var backgroungImageData = options.backgroungImageData;
+        var backgroundImage = options.backgroundImage;
+
+        var allPlatforms = [];
+
+
+        var platformGround = new Platform(0, canvas.height - 100, canvas.width, 100, {
+          color: 'rgb(25, 75, 75)'
+        }, ctx);
+
+        allPlatforms.push(platformGround);
+
+        //green hulk
+
+        var hulkGreen = new SpriteSheet({
+          parameters: {
+            height: hulk_green_right_running.height
+          },
+          run: {
+            imageRight: hulk_green_right_running,
+            imageLeft: hulk_green_left_running,
+            spritesRight: [
+              new Rectangle(0, 0, 76, 87),
+              new Rectangle(77, 0, 74, 87),
+              new Rectangle(151, 0, 90, 87),
+              new Rectangle(242, 0, 70, 87),
+              new Rectangle(312, 0, 73, 87),
+              new Rectangle(385, 0, 90, 87)
+            ]
+          },
+          stand: {
+            imageRight: hulk_green_right_stand,
+            imageLeft: hulk_green_left_stand,
+            spritesRight: [
+              new Rectangle(0, 0, 61, 87),
+              new Rectangle(71, 0, 59, 87),
+              new Rectangle(136, 0, 59, 87),
+              new Rectangle(205, 0, 61, 87),
+              new Rectangle(276, 0, 108, 87)
+            ]
+          },
+          jumpFree: {
+            imageRight: hulk_green_right_jumping,
+            imageLeft: null,
+            spritesRight: [
+              new Rectangle(),
+              new Rectangle(),
+              new Rectangle(),
+              new Rectangle()
+            ]
+          }
+        });
+
+        var hulk = new Hero(hulkGreen, new Point(100, 100), ctx, 60, allPlatforms);
+
+        document.onkeydown = function(event) {
+          if (event.keyCode == 68) {
+            hulk.pushMoveDirection('right');
+          }
+
+          if (event.keyCode == 65) {
+            hulk.pushMoveDirection('left');
+          }
+        }
+
+        document.onkeyup = function(event) {
+          //if (!(event.keyCode == 65 || event.keyCode == 68)) return;
+
+          //if (event.keyCode == 37) hulk.deleteMoveDirection('left');
+          //if (event.keyCode == 39) hulk.deleteMoveDirection('right');
+
+          if (event.keyCode == 65) hulk.deleteMoveDirection('left');
+          if (event.keyCode == 68) hulk.deleteMoveDirection('right');
+        }
+
+        GAME.tasks.push(function() {
+          //ctx.putImageData(backgroungImageData, 0.5, 0.5);
+          //ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+          /*ctx.beginPath();
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.closePath();*/
+          ctx.drawImage(background1, 0, 0, canvas.width, canvas.height);
+        });
+        GAME.tasks.push(platformGround.update.bind(platformGround));
+        GAME.tasks.push(hulk.update.bind(hulk));
+        //GAME.tasks.push(hulk2.update.bind(hulk2));
+        GAME.tasks.push(function() {
+          ctx.beginPath();
+          ctx.fillStyle = "blue";
+          ctx.font = "16px Arial";
+          ctx.fillText('FPS: ' + Math.round(GAME.lastFPS), 100, 100);
+          ctx.closePath();
+        })
+        GAME.start();
+
+      }).then(function() {
+        document.getElementById('loadingMessage').hidden = true;
+      });
+  </script>
+
+</body>
+
+</html>

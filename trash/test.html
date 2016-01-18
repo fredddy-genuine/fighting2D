@@ -1,0 +1,32 @@
+<html>
+
+<head>
+  <title>game</title>
+  <script type="text/javascript" src='Classes.js'></script>
+  <script type="text/javascript" src='Hero.js'></script>
+</head>
+
+<body>
+
+  <canvas id="maincanvas" width='1000' height='600'></canvas>
+
+  <div id="info" style='position: absolute; right: 100px; top: 100px;'></div>
+
+  <img src="spritesHulk.png" alt="" id="img1">
+
+  <script>
+    var canvas = document.getElementById('maincanvas');
+
+    var ctx = canvas.getContext('2d');
+    img1.onload = function() {
+      ctx.drawImage(img1, 100, 100, img1.width, img1.height);
+      ctx.save();
+      ctx.scale(-1, 1);
+      ctx.drawImage(img1, -100, 200, -img1.width, img1.height);
+      ctx.restore();
+    }
+  </script>
+
+</body>
+
+</html>
