@@ -138,7 +138,7 @@
       })
       .then(function() {
         return new Promise(function(resolve, reject) {
-          var message = 'loading pink_left_stand';
+          var message = 'loading hulk_pink_left_stand';
           console.log(message);
 
           hulk_pink_left_stand.src = 'Resources/Hulk/pink_left_stand.png';
@@ -256,7 +256,7 @@
         var MESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSAGE = 'CREATING GAME OBJECT'; //30 bukv S v mes_sage
         console.log(MESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSAGE);
 
-        var GAME = {
+        /*var GAME = {
           fps: 60,
           freq: Math.floor(1000 / 60),
           lastFPS: 0,
@@ -287,7 +287,47 @@
           stop: function() {
             clearInterval(GAME.timer);
           }
+        }*/
+
+        var GAME = {
+          fps: 60,
+          freq: 0,
+          lastFPS: 0,
+          framesCount: 0,
+          lastDate: 0,
+          tasks: [],
+          start: function() {
+            console.log('GAME STARTED');
+
+            this.lastDate = +(new Date());
+            this.freq = Math.floor(1000 / this.fps);
+
+            this.timer = setInterval((function(self) {
+              return function() {
+                if (self.framesCount == 123) { // condition can be different
+                  var miliSecondsPerFrame = (+(new Date()) - self.lastDate) / self.framesCount;
+                  self.lastFPS = 1000 / miliSecondsPerFrame;
+                  self.framesCount = 0;
+                  self.lastDate = +(new Date());
+                }
+
+                self.framesCount++;
+
+                for (var i = 0; i < self.tasks.length; i++) {
+                  self.tasks[i]();
+                }
+              }
+
+            })(this), this.freq);
+          },
+          appendTask: function(func) {
+            this.tasks.push(func);
+          },
+          stop: function() {
+            clearInterval(this.timer);
+          }
         }
+
 
         return new Promise(function(resolve, reject) {
           options.GAME = GAME;
@@ -376,7 +416,7 @@
           if (event.keyCode == 68) hulk.deleteMoveDirection('right');
         }
 
-        GAME.tasks.push(function() {
+        GAME.appendTask(function() {
           //ctx.putImageData(backgroungImageData, 0.5, 0.5);
           //ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
           /*ctx.beginPath();
@@ -385,10 +425,10 @@
           ctx.closePath();*/
           ctx.drawImage(background1, 0, 0, canvas.width, canvas.height);
         });
-        GAME.tasks.push(platformGround.update.bind(platformGround));
-        GAME.tasks.push(hulk.update.bind(hulk));
+        GAME.appendTask(platformGround.update.bind(platformGround));
+        GAME.appendTask(hulk.update.bind(hulk));
         //GAME.tasks.push(hulk2.update.bind(hulk2));
-        GAME.tasks.push(function() {
+        GAME.appendTask(function() {
           ctx.beginPath();
           ctx.fillStyle = "blue";
           ctx.font = "16px Arial";
