@@ -28,6 +28,7 @@
     var hulk_green_left_stand = new Image();
 
     var hulk_green_right_jumping = new Image();
+    var hulk_green_left_jumping = new Image();
 
 
     var hulk_pink_right_running = new Image();
@@ -36,9 +37,16 @@
     var hulk_pink_right_stand = new Image();
     var hulk_pink_left_stand = new Image();
 
+    var hulk_pink_right_jumping = new Image();
+    var hulk_pink_left_jumping = new Image();
+
     var background1 = new Image();
 
-
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // RUNNING
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     var loading = new Promise(function(resolve, reject) {
         var message = 'loading hulk_green_right_running';
         console.log(message);
@@ -87,8 +95,12 @@
           }
         });
       })
-
-    .then(function() { //-------------------------------------------
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // STANDING
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      .then(function() {
         return new Promise(function(resolve, reject) {
           var message = 'loading hulk_green_right_stand';
           console.log(message);
@@ -152,8 +164,12 @@
           }, 2000);
         });
       })
-
-    .then(function() { //-------------------------------------------
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // JUMPING
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      .then(function() {
         return new Promise(function(resolve, reject) {
           var message = 'loading hulk_green_right_jumping';
           console.log(message);
@@ -171,6 +187,59 @@
       })
       .then(function() {
         return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_green_left_jumping';
+          console.log(message);
+
+          hulk_green_left_jumping.src = 'Resources/Hulk/green_left_jumping.png';
+
+          hulk_green_left_jumping.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_pink_right_jumping';
+          console.log(message);
+
+          hulk_pink_right_jumping.src = 'Resources/Hulk/pink_right_jumping.png';
+
+          hulk_pink_right_jumping.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      .then(function() {
+        return new Promise(function(resolve, reject) {
+          var message = 'loading hulk_pink_left_jumping';
+          console.log(message);
+
+          hulk_pink_left_jumping.src = 'Resources/Hulk/pink_left_jumping.png';
+
+          hulk_pink_left_jumping.onload = function() {
+            resolve();
+          }
+
+          setTimeout(function() {
+            reject(message + ' fail');
+          }, 2000);
+        });
+      })
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // BACKGROUNDS
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      .then(function() {
+        return new Promise(function(resolve, reject) {
           var message = 'loading background image maxresdefault.jpg';
           console.log(message);
 
@@ -185,10 +254,12 @@
           }, 2000);
         });
       })
-
-
-
-    .then(function() {
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // FINAL RESULT OF RESOURCES LOADING
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      .then(function() {
         var message = 'Resourses loading success';
         console.log(message);
 
@@ -196,6 +267,11 @@
       }, function(error) {
         console.log('Loading Error ' + error);
       })
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // DRAWING GAME BACKGRONUD
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       .then(function() {
         var message = 'creating background';
         console.log(message);
@@ -382,14 +458,14 @@
               new Rectangle(276, 0, 108, 87)
             ]
           },
-          jumpFree: {
+          jump: {
             imageRight: hulk_green_right_jumping,
-            imageLeft: null,
+            imageLeft: hulk_green_left_jumping,
             spritesRight: [
-              new Rectangle(),
-              new Rectangle(),
-              new Rectangle(),
-              new Rectangle()
+              new Rectangle(0, 0, 55, 87),
+              new Rectangle(58, 0, 61, 87),
+              new Rectangle(121, 0, 66, 87),
+              new Rectangle(189, 0, 70, 87)
             ]
           }
         });
@@ -397,23 +473,15 @@
         var hulk = new Hero(hulkGreen, new Point(100, 100), ctx, 60, allPlatforms);
 
         document.onkeydown = function(event) {
-          if (event.keyCode == 68) {
-            hulk.pushMoveDirection('right');
-          }
-
-          if (event.keyCode == 65) {
-            hulk.pushMoveDirection('left');
-          }
+          if (event.keyCode == 68) hulk.pushMoveDirection('right');
+          if (event.keyCode == 65) hulk.pushMoveDirection('left');
+          if (event.keyCode == 87) hulk.startJumping();
         }
 
         document.onkeyup = function(event) {
-          //if (!(event.keyCode == 65 || event.keyCode == 68)) return;
-
-          //if (event.keyCode == 37) hulk.deleteMoveDirection('left');
-          //if (event.keyCode == 39) hulk.deleteMoveDirection('right');
-
           if (event.keyCode == 65) hulk.deleteMoveDirection('left');
           if (event.keyCode == 68) hulk.deleteMoveDirection('right');
+          if (event.keyCode == 87) hulk.stopJumping();
         }
 
         GAME.appendTask(function() {
