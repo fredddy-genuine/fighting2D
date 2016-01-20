@@ -423,11 +423,36 @@
         var allPlatforms = [];
 
 
-        var platformGround = new Platform(0, canvas.height - 100, canvas.width, 100, {
+        var platformGround = new Platform(170, canvas.height - 100, canvas.width, 100, {
           color: 'rgb(25, 75, 75)'
         }, ctx);
 
+        var platform1 = new Platform(520, canvas.height - 150, 150, 20, {
+          color: 'rgb(25, 75, 75)'
+        }, ctx);
+
+        var platform2 = new Platform(670, canvas.height - 220, 100, 20, {
+          color: 'rgb(25, 75, 75)'
+        }, ctx);
+
+        var platform3 = new Platform(770, canvas.height - 290, 100, 20, {
+          color: 'rgb(25, 75, 75)'
+        }, ctx);
+
+        var platform4 = new Platform(870, canvas.height - 360, 100, 20, {
+          color: 'rgb(25, 75, 75)'
+        }, ctx);
+
+        var platform5 = new Platform(300, canvas.height - 450, 420, 20, {
+          color: 'rgb(75, 25, 25)'
+        }, ctx);
+
         allPlatforms.push(platformGround);
+        allPlatforms.push(platform1);
+        allPlatforms.push(platform2);
+        allPlatforms.push(platform3);
+        allPlatforms.push(platform4);
+        allPlatforms.push(platform5);
 
         //green hulk
 
@@ -470,7 +495,7 @@
           }
         });
 
-        var hulk = new Hero(hulkGreen, new Point(100, 100), ctx, 60, allPlatforms);
+        var hulk = new Hero(hulkGreen, new Point(200, 100), ctx, 60, allPlatforms);
 
         document.onkeydown = function(event) {
           if (event.keyCode == 68) hulk.pushMoveDirection('right');
@@ -493,7 +518,14 @@
           ctx.closePath();*/
           ctx.drawImage(background1, 0, 0, canvas.width, canvas.height);
         });
-        GAME.appendTask(platformGround.update.bind(platformGround));
+        //GAME.appendTask();
+        GAME.appendTask((function(allPlatforms) {
+          return function() {
+            for (var i = 0; i < allPlatforms.length; i++) {
+              allPlatforms[i].update();
+            }
+          }
+        })(allPlatforms));
         GAME.appendTask(hulk.update.bind(hulk));
         //GAME.tasks.push(hulk2.update.bind(hulk2));
         GAME.appendTask(function() {

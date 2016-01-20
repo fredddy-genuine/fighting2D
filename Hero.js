@@ -20,8 +20,8 @@ function Hero(spriteSheet, startPoint, context, fps, platforms) {
     jerked: false,
     jerkHeight: 40,
     speedAfterJerk: 25,
-    decelerationCoefficient: 0.92,
-    deferStoppingJumping: false
+    decelerationCoefficient: 0.95,
+    deferStoppingJumping: false,
   };
 
   this.jumpDetails = Object.create(this.jumpDetailsDefault);
@@ -59,15 +59,24 @@ Hero.prototype.makeFalling = function() {
 Hero.prototype.makeGravity = function() {
   for (var i = 0; i < this.platforms.length; i++) {
     this.canFalling = true;
-    if (this.y + this.height - 5 >= this.platforms[i].y) {
+    if (this.y + this.height >= this.platforms[i].y + 5 && this.y + this.height < this.platforms[i].y + this.gravity * 2 &&
+      this.x + this.currentSpriteRectangle.width > this.platforms[i].x && this.x < this.platforms[i].x + this.platforms[i].width &&
+      this._getFallingDirectionVertical() == 'down') {
+
       this.y = this.platforms[i].y - this.height + 5;
       this.canFalling = false;
       if (this.jumpDetails.started) this._restartJumping();
-      else if(this.jumpDetails.deferStoppingJumping) this.stopDeferedJumping();
+      else if (this.jumpDetails.deferStoppingJumping) this._stopDeferedJumping();
       break;
     }
   }
   if (this.canFalling) this.makeFalling();
+}
+
+Hero.prototype._getFallingDirectionVertical = function() {
+  if (this.jumpDetails.jerked && this.jumpDetails.speedAfterJerk < this.gravity) return 'down';
+  else if (!this.jumpDetails.jerked) return 'down';
+  else return 'up';
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,7 +134,14 @@ Hero.prototype.move = function() {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Hero.prototype.startJumping = function() {
-  if (this.jumpDetails.started || this.canFalling) return; // if remove this.canFalling, hero could jumping like flappy bird
+  if (this.jumpDetails.started || this.canFalling) {
+    if (this.jumpDetails.deferStoppingJumping || !this.jumpDetails.started && this.canFalling) {
+      this.jumpDetails.started = true;
+      this.jumpDetails.deferStoppingJumping = false;
+    }
+
+    return;
+  }
   this.jumpDetails.started = true;
   this.jumpDetails.jerked = true;
   this.y -= this.jumpDetails.jerkHeight;
@@ -151,7 +167,7 @@ Hero.prototype.stopJumping = function() {
   this.jumpDetails.deferStoppingJumping = true;
 }
 
-Hero.prototype.stopDeferedJumping = function() {
+Hero.prototype._stopDeferedJumping = function() {
   this.jumpDetails = Object.create(this.jumpDetailsDefault);
 }
 
@@ -228,12 +244,12 @@ Hero.prototype._draw = function() {
     __index = 0;
   }
   this.context.fillStyle = 'rgba(100, 100, 220, 0.5)';
-  this.context.fillRect(this.currentSpriteRectangle.x, this.currentSpriteRectangle.y,
-    this.currentSpriteRectangle.width * this.scaleWidthHeight,
-    this.currentSpriteRectangle.height * this.scaleWidthHeight);
+  //this.context.fillRect(this.currentSpriteRectangle.x, this.currentSpriteRectangle.y,
+  //this.currentSpriteRectangle.width * this.scaleWidthHeight,
+  //this.currentSpriteRectangle.height * this.scaleWidthHeight);
   //******************************
   //******************************
-  this.context.beginPath();
+  this.context.save();
   this.context.fillStyle = "blue";
   this.context.font = "16px Arial";
   this.context.fillText('lastMoveDirection: ' + this.lastMoveDirection, 700, 100);
@@ -241,7 +257,10 @@ Hero.prototype._draw = function() {
   this.context.fillText('this.status: ' + this.status, 700, 160);
   this.context.fillText('this.x: ' + this.x, 900, 140);
   this.context.fillText('this.y: ' + this.y, 900, 160);
-  this.context.closePath();
+  this.context.fillText('this._getFallingDirectionVertical(): ' + this._getFallingDirectionVertical(), 900, 200);
+  this.context.fillText('this.jumpDetails.started: ' + this.jumpDetails.started, 400, 100);
+  this.context.fillText('this.canFalling: ' + this.canFalling, 400, 150);
+  this.context.restore();
 
   //******************************
   //******************************
