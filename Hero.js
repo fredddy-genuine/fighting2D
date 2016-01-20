@@ -20,7 +20,8 @@ function Hero(spriteSheet, startPoint, context, fps, platforms) {
     jerked: false,
     jerkHeight: 40,
     speedAfterJerk: 25,
-    decelerationCoefficient: 0.92
+    decelerationCoefficient: 0.92,
+    deferStoppingJumping: false
   };
 
   this.jumpDetails = Object.create(this.jumpDetailsDefault);
@@ -61,7 +62,8 @@ Hero.prototype.makeGravity = function() {
     if (this.y + this.height - 5 >= this.platforms[i].y) {
       this.y = this.platforms[i].y - this.height + 5;
       this.canFalling = false;
-      if (this.jumpDetails.started /* && this.jumpDetails.jerked*/ ) this._restartJumping();
+      if (this.jumpDetails.started) this._restartJumping();
+      else if(this.jumpDetails.deferStoppingJumping) this.stopDeferedJumping();
       break;
     }
   }
@@ -145,8 +147,12 @@ Hero.prototype._restartJumping = function() {
 }
 
 Hero.prototype.stopJumping = function() {
-  this.jumpDetails = Object.create(this.jumpDetailsDefault);
   this.jumpDetails.started = false;
+  this.jumpDetails.deferStoppingJumping = true;
+}
+
+Hero.prototype.stopDeferedJumping = function() {
+  this.jumpDetails = Object.create(this.jumpDetailsDefault);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
