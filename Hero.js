@@ -45,7 +45,6 @@ function Hero(spriteSheet, startPoint, context, fps, platforms) {
   this.platforms = platforms;
 }
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // FALLING AND GRAVITY
@@ -62,7 +61,7 @@ Hero.prototype.makeGravity = function() {
     if (this.y + this.height - 5 >= this.platforms[i].y) {
       this.y = this.platforms[i].y - this.height + 5;
       this.canFalling = false;
-      if (this.jumpDetails.started/* && this.jumpDetails.jerked*/) this._restartJumping();
+      if (this.jumpDetails.started /* && this.jumpDetails.jerked*/ ) this._restartJumping();
       break;
     }
   }
@@ -124,7 +123,7 @@ Hero.prototype.move = function() {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Hero.prototype.startJumping = function() {
-  if(this.jumpDetails.started || this.canFalling) return; // if remove this.canFalling, hero could jumping like flappy bird
+  if (this.jumpDetails.started || this.canFalling) return; // if remove this.canFalling, hero could jumping like flappy bird
   this.jumpDetails.started = true;
   this.jumpDetails.jerked = true;
   this.y -= this.jumpDetails.jerkHeight;
