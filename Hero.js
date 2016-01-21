@@ -4,9 +4,13 @@ function Hero(spriteSheet, startPoint, context, fps, platforms) {
   this.spriteSheet = spriteSheet;
   this.spriteSheet.run.spritesImgWidth = this.spriteSheet.run.imageRight.width;
   this.spriteSheet.stand.spritesImgWidth = this.spriteSheet.stand.imageRight.width;
+  this.spriteSheet.jump.spritesImgWidth = this.spriteSheet.jump.imageRight.width;
 
-  this.indexOfSpriteRun = 2;
+  this.indexOfSpriteRun = 0;
   this.countOfSprites = spriteSheet.run.spritesRight.length;
+
+  this.indexOfSpriteJump = 1;
+  this.fallingDirectionVertical = 'down';
 
   this.x = startPoint.x;
   this.y = startPoint.y;
@@ -21,7 +25,7 @@ function Hero(spriteSheet, startPoint, context, fps, platforms) {
     jerkHeight: 40,
     speedAfterJerk: 25,
     decelerationCoefficient: 0.95,
-    deferStoppingJumping: false,
+    deferStoppingJumping: false
   };
 
   this.jumpDetails = Object.create(this.jumpDetailsDefault);
@@ -41,9 +45,17 @@ function Hero(spriteSheet, startPoint, context, fps, platforms) {
   this.canFalling = true;
 
   this.status = 'stand';
+  this.deferedStatus = 'stand';
   this.currentSpriteRectangle = this.spriteSheet.stand.spritesRight[0];
 
   this.platforms = platforms;
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //~~~~~~~~~~~HELPER~~~~~~~~~~~~~~~~~~~~~~~
+  this.fillStyleHeroRectangle = 'rgba(100, 100, 220, 0.5)';
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,7 +73,7 @@ Hero.prototype.makeGravity = function() {
     this.canFalling = true;
     if (this.y + this.height >= this.platforms[i].y + 5 && this.y + this.height < this.platforms[i].y + this.gravity * 2 &&
       this.x + this.currentSpriteRectangle.width > this.platforms[i].x && this.x < this.platforms[i].x + this.platforms[i].width &&
-      this._getFallingDirectionVertical() == 'down') {
+      this.fallingDirectionVertical == 'down') {
 
       this.y = this.platforms[i].y - this.height + 5;
       this.canFalling = false;
@@ -73,10 +85,17 @@ Hero.prototype.makeGravity = function() {
   if (this.canFalling) this.makeFalling();
 }
 
-Hero.prototype._getFallingDirectionVertical = function() {
-  if (this.jumpDetails.jerked && this.jumpDetails.speedAfterJerk < this.gravity) return 'down';
-  else if (!this.jumpDetails.jerked) return 'down';
-  else return 'up';
+Hero.prototype._updateFallingDirectionVertical = function() {
+  if (this.jumpDetails.jerked && this.jumpDetails.speedAfterJerk < this.gravity) {
+    this.fallingDirectionVertical = 'down';
+    this.indexOfSpriteJump = 1;
+  } else if (!this.jumpDetails.jerked) {
+    this.fallingDirectionVertical = 'down';
+    this.indexOfSpriteJump = 1;
+  } else {
+    this.fallingDirectionVertical = 'up';
+    this.indexOfSpriteJump = 3;
+  }
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -145,6 +164,10 @@ Hero.prototype.startJumping = function() {
   this.jumpDetails.started = true;
   this.jumpDetails.jerked = true;
   this.y -= this.jumpDetails.jerkHeight;
+  this.fillStyleHeroRectangle = 'rgba(' + this._rand(0, 250) + ', ' + this._rand(0, 250) + ', ' + this._rand(0, 250) + ', 0.5)';
+
+  this.deferedStatus = this.status;
+  this._changeStatus('jump');
 }
 
 Hero.prototype._jump = function() {
@@ -160,6 +183,8 @@ Hero.prototype._restartJumping = function() {
   this.jumpDetails.started = true;
   this.jumpDetails.jerked = true;
   this.y -= this.jumpDetails.jerkHeight;
+  this.fillStyleHeroRectangle = 'rgba(' + this._rand(0, 250) + ', ' + this._rand(0, 250) + ', ' + this._rand(0, 250) + ', 0.5)';
+  this._changeStatus('jump');
 }
 
 Hero.prototype.stopJumping = function() {
@@ -169,6 +194,7 @@ Hero.prototype.stopJumping = function() {
 
 Hero.prototype._stopDeferedJumping = function() {
   this.jumpDetails = Object.create(this.jumpDetailsDefault);
+  this._changeStatus(this.deferedStatus);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -178,6 +204,11 @@ Hero.prototype._stopDeferedJumping = function() {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Hero.prototype._changeStatus = function(newStatus) {
+  if (newStatus != 'jump' && this.jumpDetails.jerked) {
+    this.deferedStatus = newStatus;
+    return;
+  }
+  //alert(newStatus + ' ; ' + this.jumpDetails.jerked);
   this.status = newStatus;
 }
 
@@ -204,6 +235,8 @@ Hero.prototype.update = function() {
 
   this._updateCurrentSpriteRectangleInfo();
 
+  this._updateFallingDirectionVertical();
+
   this._draw();
 }
 
@@ -217,7 +250,7 @@ Hero.prototype._updateCurrentSpriteRectangleInfo = function() {
     //if (this.lastMoveDirection == 'left')
     //this.currentSpriteRectangle.x = this.spriteSheet.run.spritesImgWidth - this._getWidth('run', this.indexOfSpriteRun);
   } else if (this.status == 'jump') {
-
+    this.currentSpriteRectangle = Object.create(this.spriteSheet.jump.spritesRight[1]);
   }
 
   this.currentSpriteRectangle.x = this.x;
@@ -243,10 +276,10 @@ Hero.prototype._draw = function() {
   } else if (this.status == 'stand') {
     __index = 0;
   }
-  this.context.fillStyle = 'rgba(100, 100, 220, 0.5)';
-  //this.context.fillRect(this.currentSpriteRectangle.x, this.currentSpriteRectangle.y,
-  //this.currentSpriteRectangle.width * this.scaleWidthHeight,
-  //this.currentSpriteRectangle.height * this.scaleWidthHeight);
+  this.context.fillStyle = this.fillStyleHeroRectangle; //'rgba(100, 100, 220, 0.5)';
+  this.context.fillRect(this.currentSpriteRectangle.x, this.currentSpriteRectangle.y,
+    this.currentSpriteRectangle.width * this.scaleWidthHeight,
+    this.currentSpriteRectangle.height * this.scaleWidthHeight);
   //******************************
   //******************************
   this.context.save();
@@ -257,9 +290,10 @@ Hero.prototype._draw = function() {
   this.context.fillText('this.status: ' + this.status, 700, 160);
   this.context.fillText('this.x: ' + this.x, 900, 140);
   this.context.fillText('this.y: ' + this.y, 900, 160);
-  this.context.fillText('this._getFallingDirectionVertical(): ' + this._getFallingDirectionVertical(), 900, 200);
+  this.context.fillText('this.fallingDirectionVertical: ' + this.fallingDirectionVertical, 900, 200);
   this.context.fillText('this.jumpDetails.started: ' + this.jumpDetails.started, 400, 100);
   this.context.fillText('this.canFalling: ' + this.canFalling, 400, 150);
+  this.context.fillText('this.jumpDetails.jerked: ' + this.jumpDetails.jerked, 400, 200);
   this.context.restore();
 
   //******************************
@@ -300,19 +334,19 @@ Hero.prototype._draw = function() {
     }
   } else if (this.status == 'jump') {
     if (this.lastMoveDirection == 'right') {
-      this.context.drawImage(this.spriteSheet.stand.imageRight,
-        this.spriteSheet.stand.spritesRight[0].x, this.spriteSheet.stand.spritesRight[0].y,
-        this.spriteSheet.stand.spritesRight[0].width, this.spriteSheet.stand.spritesRight[0].height,
+      this.context.drawImage(this.spriteSheet.jump.imageRight,
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].x, this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].y,
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].width, this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].height,
         this.x, this.y,
-        this.spriteSheet.stand.spritesRight[0].width * this.scaleWidthHeight,
-        this.spriteSheet.stand.spritesRight[0].height * this.scaleWidthHeight);
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].width * this.scaleWidthHeight,
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].height * this.scaleWidthHeight);
     } else if (this.lastMoveDirection == 'left') {
-      this.context.drawImage(this.spriteSheet.stand.imageLeft,
-        this.spriteSheet.stand.spritesImgWidth - this._getWidth('stand', 0), this.spriteSheet.stand.spritesRight[0].y,
-        this.spriteSheet.stand.spritesRight[0].width, this.spriteSheet.stand.spritesRight[0].height,
+      this.context.drawImage(this.spriteSheet.jump.imageLeft,
+        this.spriteSheet.jump.spritesImgWidth - this._getWidth('jump', this.indexOfSpriteJump), this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].y,
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].width, this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].height,
         this.x, this.y,
-        this.spriteSheet.stand.spritesRight[0].width * this.scaleWidthHeight,
-        this.spriteSheet.stand.spritesRight[0].height * this.scaleWidthHeight);
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].width * this.scaleWidthHeight,
+        this.spriteSheet.jump.spritesRight[this.indexOfSpriteJump].height * this.scaleWidthHeight);
     }
   }
 }
@@ -331,4 +365,8 @@ Hero.prototype._getWidth = function(status, index) {
     i--;
   }
   return width + 1;
+}
+
+Hero.prototype._rand = function(min, max) {
+  return Math.round(Math.random() * (max - min + 1) + min - 0.5);
 }
